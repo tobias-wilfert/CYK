@@ -5,31 +5,6 @@
 
 #include "ContextFreeGrammar.h"
 
-// TODO This is only for debugging remove once the HTML is ready
-template<typename T>
-std::ostream& operator<< (std::ostream& out, const std::set<T>& s) {
-  out << "{";
-  int32_t count = 0;
-  for(auto& i: s){
-    out << i ;
-    if(++count < s.size()){out << ", ";}
-  }
-  out << "}";
-  return out;
-}
-
-template<typename T>
-std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
-  out << "\n[";
-  size_t last = v.size() - 1;
-  for (size_t i = 0; i < v.size(); ++i) {
-    out << v[i];
-    if (i != last){ out << ", "; }
-  }
-  out << "]";
-  return out;
-}
-
 void CYK::Productions::addProduction(const std::string &variable,
                                      const CYK::Replacement &replacement) {
   productions[variable].insert(replacement);
@@ -83,11 +58,8 @@ void CYK::ContextFreeGrammar::CYK(const std::string &input) {
      table.at(i).at(j) = varsForCell;
     }
   }
-  std::cout << table << std::endl;
-  if(table.at(input.size()-1).at(0).count(startSymbol) > 0){
-    std::cout << "\"" << input  << "\"" << "is accepted by the CFG" << std::endl;
-  }
-  createHTMLRepresentation("index", table);
+
+  createHTMLRepresentation(input, table);
 }
 
 CYK::Table CYK::ContextFreeGrammar::generateCYKTable(int size) {
@@ -112,25 +84,32 @@ std::vector<CYK::Replacement> CYK::ContextFreeGrammar::getPermutations(
 }
 
 void CYK::ContextFreeGrammar::createHTMLRepresentation(
-    const std::string &fileName, const CYK::Table &table) const {
+    const std::string &input, const CYK::Table &table) const {
 
-  //TODO Make the HTML Prettier
-  std::string htmlDoc = "<html><style>table, th, td { border: 1px solid black;}</style><table>";
+  //TODO Make the HTML prettier
+  std::string htmlDoc = "<html>\n"
+                        "<style>\n"
+                        "  table, th, td { border: 1px solid black;}\n"
+                        "  html *{font-family: Arial, Helvetica, sans-serif;}\n"
+                        "</style>\n";
+
+  htmlDoc += ("<h3>CYK table for \"" + input + "\"</h3>\n");
+  htmlDoc += "<table>\n";
   for(auto& row: table){
-    htmlDoc += "<tr>";
+    htmlDoc += "  <tr>\n";
     for(auto& col: row){
-      htmlDoc += "<th>";
+      htmlDoc += "    <th>";
       for(auto& con: col){
         htmlDoc += con + ",";
       }
       if(htmlDoc.back() == ','){ htmlDoc.pop_back(); }
-      htmlDoc += "</th>";
+      htmlDoc += "</th>\n";
     }
-    htmlDoc += "</tr>";
+    htmlDoc += "  </tr>\n";
   }
-
-  htmlDoc += "</table></table>";
-  std::ofstream out(fileName + ".html");
+  htmlDoc += "</table>\n"
+             "</html>";
+  std::ofstream out("CYKTable-" + input + ".html");
   out << htmlDoc;
   out.close();
 }

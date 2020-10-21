@@ -83,7 +83,7 @@ class ContextFreeGrammar {
   std::vector<Replacement> getPermutations(
       const std::set<std::string>& set1, const std::set<std::string>& set2) const;
 
-  void createHTMLRepresentation(const std::string& fileName, const Table& table) const;
+  void createHTMLRepresentation(const std::string& input, const Table& table) const;
 
  public:
   /**
