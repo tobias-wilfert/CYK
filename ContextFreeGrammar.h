@@ -7,7 +7,11 @@
 #define CYK__CONTEXTFREEGRAMMAR_H_
 
 #include <set>
+#include <vector>
 #include <string>
+#include <fstream>
+#include <utility>
+#include <iostream>
 #include <unordered_set>
 
 #include "nlohmann/json.hpp"
@@ -17,6 +21,9 @@ namespace CYK{
 
 /// Representation of a single replacement a variable can have
 using Replacement = std::vector<std::string>;
+
+/// The datatype of the Table the CYK is using
+using Table = std::vector<std::vector<std::set<std::string>>>;
 
 /// A struct that represents the productions of a CFG
 struct Productions {
@@ -70,6 +77,14 @@ class ContextFreeGrammar {
   /// The finite set of terminals
   std::unordered_set<std::string> terminals;
 
+  // TODO: Add documentation
+  static Table generateCYKTable(int size);
+
+  std::vector<Replacement> getPermutations(
+      const std::set<std::string>& set1, const std::set<std::string>& set2) const;
+
+  void createHTMLRepresentation(const std::string& fileName, const Table& table) const;
+
  public:
   /**
    * Initializes the CFG from a json representation of the CFG
@@ -89,7 +104,8 @@ class ContextFreeGrammar {
                      std::unordered_set<std::string> variables,
                      std::unordered_set<std::string> terminals);
 
-  // TODO Add CYK
+  // TODO: Add documentation
+  void CYK(const std::string& input);
 };
 
 } // namespace CYK
