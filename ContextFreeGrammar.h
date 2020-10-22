@@ -17,6 +17,8 @@
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;
 
+
+/// Namespace used for the CYK algorithm
 namespace CYK{
 
 /// Representation of a single replacement a variable can have
@@ -49,13 +51,6 @@ struct Productions {
   void addProduction(const std::string &variable, const Replacement &replacement);
 
   /**
-   * Get the replacements for the variable
-   * @param variable The variable the replacements are for
-   * @return A set of replacements
-   */
-  std::set<Replacement> getReplacementsFor(const std::string &variable);
-
-  /**
    * Get all the variables that have a certain replacement
    * @param replacement The replacement that the variable needs to have
    * @return A set of all the variables that have replacement replacement
@@ -63,6 +58,7 @@ struct Productions {
   std::set<std::string> getVariablesThatProduce(const Replacement& replacement);
 };
 
+/// A class representing the CFG with the addition of the CYK algorithm
 class ContextFreeGrammar {
  private:
   /// The start symbol
@@ -77,13 +73,27 @@ class ContextFreeGrammar {
   /// The finite set of terminals
   std::unordered_set<std::string> terminals;
 
-  // TODO: Add documentation
+  /**
+   * Generates a table for the CYK table
+   * @param size The size the table should have
+   * @return A Table with the specified size
+   */
   static Table generateCYKTable(int size);
 
+  /**
+   * Get all the permutation of two sets
+   * @param set1 The first set that should be used for the permutation
+   * @param set2  The second set that should be used for the permutation
+   * @return A vector of vectors each containing two strings one from the first
+   *    set followed by one from the second
+   */
   std::vector<Replacement> getPermutations(
-      const std::set<std::string>& set1, const std::set<std::string>& set2) const;
+      const std::set<std::string>& set1,
+      const std::set<std::string>& set2) const;
 
-  void createHTMLRepresentation(const std::string& input, const Table& table) const;
+  /// Creates an HTML representation of the CYK table
+  void createHTMLRepresentation(
+      const std::string& input, const Table& table) const;
 
  public:
   /**
@@ -93,18 +103,9 @@ class ContextFreeGrammar {
   explicit ContextFreeGrammar(const json &j);
 
   /**
-   * Normal constructor of the CFG
-   * @param start_symbol The start symbol
-   * @param productions The productions
-   * @param variables The Variables
-   * @param terminals The Terminals
+   * Checks whether input is in th language of the CFG
+   * @param input The input string that is being checked
    */
-  ContextFreeGrammar(std::string start_symbol,
-                     Productions productions,
-                     std::unordered_set<std::string> variables,
-                     std::unordered_set<std::string> terminals);
-
-  // TODO: Add documentation
   void CYK(const std::string& input);
 };
 

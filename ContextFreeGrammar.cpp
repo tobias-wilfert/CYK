@@ -10,10 +10,7 @@ void CYK::Productions::addProduction(const std::string &variable,
   productions[variable].insert(replacement);
   reverseProductions[replacement].insert(variable);
 }
-std::set<CYK::Replacement> CYK::Productions::getReplacementsFor(
-    const std::string &variable) {
-  return productions[variable];
-}
+
 std::set<std::string> CYK::Productions::getVariablesThatProduce(
     const CYK::Replacement &replacement) {
   return reverseProductions[replacement];
@@ -28,15 +25,6 @@ CYK::ContextFreeGrammar::ContextFreeGrammar(const json &j) {
                               element["body"]);
   }
 }
-
-CYK::ContextFreeGrammar::ContextFreeGrammar(
-    std::string start_symbol,
-    CYK::Productions productions,
-    std::unordered_set<std::string> variables,
-    std::unordered_set<std::string> terminals) : startSymbol(std::move(start_symbol)),
-                                                 productions(std::move(productions)),
-                                                 variables(std::move(variables)),
-                                                 terminals(std::move(terminals)) {}
 
 void CYK::ContextFreeGrammar::CYK(const std::string &input) {
   Table  table = generateCYKTable(input.size());
@@ -58,7 +46,6 @@ void CYK::ContextFreeGrammar::CYK(const std::string &input) {
      table.at(i).at(j) = varsForCell;
     }
   }
-
   createHTMLRepresentation(input, table);
 }
 
