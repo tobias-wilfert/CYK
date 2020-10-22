@@ -87,13 +87,13 @@ class ContextFreeGrammar {
    * @return A vector of vectors each containing two strings one from the first
    *    set followed by one from the second
    */
-  std::vector<Replacement> getPermutations(
+  static std::vector<Replacement> getPermutations(
       const std::set<std::string>& set1,
-      const std::set<std::string>& set2) const;
+      const std::set<std::string>& set2) ;
 
   /// Creates an HTML representation of the CYK table
-  void createHTMLRepresentation(
-      const std::string& input, const Table& table) const;
+  static void createHTMLRepresentation(
+      const std::string& input, const Table& table) ;
 
  public:
   /**

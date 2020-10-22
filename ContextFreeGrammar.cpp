@@ -60,7 +60,7 @@ CYK::Table CYK::ContextFreeGrammar::generateCYKTable(int size) {
 }
 
 std::vector<CYK::Replacement> CYK::ContextFreeGrammar::getPermutations(
-    const std::set<std::string> &set1, const std::set<std::string> &set2) const {
+    const std::set<std::string> &set1, const std::set<std::string> &set2) {
   std::vector<Replacement> result;
   for(auto& p: set1){
     for(auto& q: set2){
@@ -71,30 +71,35 @@ std::vector<CYK::Replacement> CYK::ContextFreeGrammar::getPermutations(
 }
 
 void CYK::ContextFreeGrammar::createHTMLRepresentation(
-    const std::string &input, const CYK::Table &table) const {
-
-  //TODO Make the HTML prettier
+    const std::string &input, const CYK::Table &table) {
   std::string htmlDoc = "<html>\n"
                         "<style>\n"
-                        "  table, th, td { border: 1px solid black;}\n"
+                        "  table, td { border: 1px solid black;"
+                        "              padding: 5px;}\n"
                         "  html *{font-family: Arial, Helvetica, sans-serif;}\n"
-                        "</style>\n";
-
-  htmlDoc += ("<h3>CYK table for \"" + input + "\"</h3>\n");
-  htmlDoc += "<table>\n";
-  for(auto& row: table){
+                        "</style>\n"
+                        "<table>\n";
+  htmlDoc += ("<caption>CYK table for \"" + input + "\"</caption>\n");
+  // The Main table
+  for(int i = table.size()-1; i > -1; --i){
     htmlDoc += "  <tr>\n";
-    for(auto& col: row){
-      htmlDoc += "    <th>";
+    for(auto& col: table.at(i)){
+      htmlDoc += "    <td>";
       for(auto& con: col){
         htmlDoc += con + ",";
       }
       if(htmlDoc.back() == ','){ htmlDoc.pop_back(); }
-      htmlDoc += "</th>\n";
+      htmlDoc += "</td>\n";
     }
     htmlDoc += "  </tr>\n";
   }
-  htmlDoc += "</table>\n"
+  // Add the input to the bottom of the table
+  htmlDoc += "  <tr>\n";
+  for(auto& s: input){
+    htmlDoc += ("    <th>" + std::string{s} + "</th>\n");
+  }
+  htmlDoc += "  </tr>\n"
+             "</table>\n"
              "</html>";
   std::ofstream out("CYKTable-" + input + ".html");
   out << htmlDoc;
