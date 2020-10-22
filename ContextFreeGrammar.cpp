@@ -72,9 +72,9 @@ std::vector<CYK::Replacement> CYK::ContextFreeGrammar::getPermutations(
 
 void CYK::ContextFreeGrammar::createHTMLRepresentation(
     const std::string &input, const CYK::Table &table) {
-  std::string htmlDoc = "<html>\n"
+  std::string htmlDoc = "<html lang=\"en\" >\n"
                         "<style>\n"
-                        "  table, td { border: 1px solid black;"
+                        "  table, td { border: 1px solid black;\n"
                         "              padding: 5px;}\n"
                         "  html *{font-family: Arial, Helvetica, sans-serif;}\n"
                         "</style>\n"
